@@ -2,26 +2,53 @@ class StormData::Scraper
   
   @@all = []
   
-  def self.scrape_atlc
-    atlc = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=5"))
-    atlc.css("button").each do |x|
-      x
-      binding.pry
+  attr_accessor :prelim
+  
+  def scrape_prelim(user_input)
+    case user_input
+    when "Atlantic"
+      atlantic = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=5"))
+      @prelim = atlantic.css("button").collect{|x| x.text}
+      save
+    when "Eastern Pacific"
+      eastern = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=5"))
+      @prelim = eastern.css("button").collect{|x| x.text}
+      save
+    when "Central Pacific"
+      pacific = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=5"))
+      @prelim = pacific.css("button").collect{|x| x.text}
+      save
     end
   end 
   
-  def self.scrape_epac
-    epac = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=5"))
+  def self.add_extra(user_input)
+    case user_input
+    when "Atlantic"
+      atlantic = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=5"))
+      x = atlantic.css("pre").collect{|x| x.text}
+      puts x[0].split("\n").drop(4).join("\n")
+      binding.pry
+    when "Eastern Pacific"
+      eastern = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=epac&fdays=5"))
+      x = eastern.css("pre").collect{|x| x.text}
+      puts x[0].split("\n").drop(4).join("\n")
+    when "Central Pacific"
+      pacific = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=5"))
+      x = pacific.css("pre").collect{|x| x.text}
+      puts x[0].split("\n").drop(4).join("\n")
+    end
   end 
   
-  def self.scrape_cpac 
-    cpac = Nokogiri::HTML(open("https://www.nhc.noaa.gov/gtwo.php?basin=cpac&fdays=5"))
+  def save 
+    @@all << self 
   end 
   
+  def self.all 
+    @@all
+  end 
   
-# /html/body/div[5]/div/table[3]/tbody/tr/td/table[1]/tbody/tr/td/button[1] - Disturbances:
-# /html/body/div[5]/div/table[3]/tbody/tr/td/table[1]/tbody/tr/td/button[2] - None or all[1]  
-# /html/body/div[5]/div/table[5]/tbody/tr/td[2]/button - Tropical Weather Discussion
-
-  
+  def self.clear 
+    @@all.clear 
+  end 
+ 
 end 
