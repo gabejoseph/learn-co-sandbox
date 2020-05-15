@@ -2,6 +2,9 @@
 
 Welcome to Storm Chasers!  Storm Chasers is designed to help identify if a weather disturbance is going to occur in your viscinity in the next 5 days.  By following the prompts given, Storm Chasers will detect an anomaly in your general region, and then will give you a summary from a weather forecaster.
 
+All information is pulled from the National Oceanic and Atmospheric Administration.
+
+
 ## Installation
 
 Add this line to your application's Gemfile:
